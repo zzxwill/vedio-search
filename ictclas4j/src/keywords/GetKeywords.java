@@ -210,14 +210,27 @@ public class GetKeywords {
 			else if ((deletedSymbolResult[i][0].equals("左脚"))
 					||(deletedSymbolResult[i][0].equals("右脚"))
 					||(deletedSymbolResult[i][0].equals("头球"))
+					/*
+			 * 1任意球	n  把这放在身体部位里
+			 */
+					||(deletedSymbolResult[i][1].equals("任意球"))
 					){
 				/*
 				 * bp--bodypart
 				 */
 				deletedSymbolResult[i][1]="bp";
 			}
+			
+			/*
+			 * 得/u 分/v 
+			 */
+			else if (deletedSymbolResult[i][1].equals("u")
+					&&((i+1<length)&&(deletedSymbolResult[i+1][1].equals("v")))){
+				deletedSymbolResult[i][1]="v";
+			}
+			
 		}
-			// 我/r
+			
 	}
 	
 	
@@ -379,7 +392,10 @@ public class GetKeywords {
 						 */
 						|| deletedSymbolResult[i + 1][1].equals("v")))) {
 					if (((i + 2) < length)
-							&& (deletedSymbolResult[i + 2][1].equals("n"))) {
+							/*
+							 * 射门/v 得/u 分/v -----------射门/v 得/v 分/v
+							 */
+							&& ((deletedSymbolResult[i + 2][1].equals("n"))||(deletedSymbolResult[i + 2][1].equals("v")))) {
 
 						keyword[k].setAction(actionNo,
 								deletedSymbolResult[i][0]
@@ -449,15 +465,38 @@ public class GetKeywords {
 
 			}
 			/*
-			 * 禁区/n 内/f f 方位词
+			 * 
+			 * 
+			 * 小/a 禁区/n 内/f
 			 */
 			else if (deletedSymbolResult[i][1].equals("n")
 					&& ((i + 1 < length) && deletedSymbolResult[i + 1][1]
 							.equals("f"))) {
+				if((i-1>=0)&&(deletedSymbolResult[i-1][1].equals("a"))){
+					keyword[sceneNo].setScene(deletedSymbolResult[i-1][0]+deletedSymbolResult[i][0]
+					                         						+ deletedSymbolResult[i + 1][0]);
+				}
+				/*
+				 * 禁区/n 内/f f 方位词
+				 */
+				else{
+				keyword[sceneNo].setScene(deletedSymbolResult[i][0]
+						+ deletedSymbolResult[i + 1][0]);
+				}
+				
+
+			}
+			/*
+			 * 中/f 场/q
+			 */
+			else if (deletedSymbolResult[i][1].equals("f")
+					&& ((i + 1 < length) && deletedSymbolResult[i + 1][1]
+							.equals("q"))) {
 				keyword[sceneNo].setScene(deletedSymbolResult[i][0]
 						+ deletedSymbolResult[i + 1][0]);
 
 			}
+			
 
 		}
 		// System.out.println(scene);
@@ -515,6 +554,10 @@ public class GetKeywords {
 		 * 在"关键词到知识表达集的映射"时，可以将"抱住"映射为"抱球"
 		 */
 		System.out.println("5.守门员将球死死抱住");
+		System.out.println("5.何塞·保罗·格雷罗经过连续传球精密配合，丹尼·墨菲助攻西蒙·戴维斯破门得分");
+		System.out.println("4.范尼斯特鲁伊小禁区内右脚射门");
+		
+
 
 
 		GetKeywords key = new GetKeywords();
@@ -538,6 +581,41 @@ public class GetKeywords {
 		key.insertAction();
 		key.insertScene();
 		key.insertBodyPart();
+		/*
+		 * 本来应该是每个主体对对应其自己的行为、场景和身体部位，这是不恰当的！
+		 * 
+		 * 但是
+		 * 
+		 * 突然发现，这样写，恰恰表现了动作的时间性
+		 * 
+		 *  如
+主体0:何塞·保罗·格雷罗
+行为0-0:传球
+行为0-1:配合
+行为0-2:null
+行为0-3:null
+场景0:null
+身体部位0:null
+
+主体1:丹尼·墨菲
+行为1-0:null
+行为1-1:null
+行为1-2:助攻
+行为1-3:null
+场景1:null
+身体部位1:null
+
+主体2:西蒙·戴维斯
+行为2-0:null
+行为2-1:null
+行为2-2:null
+行为2-3:破门得分
+场景2:null
+身体部位2:null
+		 *
+		 *0-0:传球 	 0-1:配合	1-2:助攻		2-3:破门得分
+
+		 */
 		for (int i = 0; i < key.subjectNo; i++) {
 			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
 			for (int j = 0; j < key.actionNo; j++) {
