@@ -175,32 +175,30 @@ public class GetKeywords {
 		}
 
 	}
-	
+
 	/*
 	 * 由于类似"守门员/n"之类的主体，被简单地处理为了名词，不便于主体的提取，因此，下面的类，作为
 	 * 词典的补充部分，在”关键词“提取处理之前，对分词作进一步的处理
 	 * 
 	 * 后期优化，可以考虑将这部分做在一个词典
 	 */
-	public void plusDictionary(){
+	public void plusDictionary() {
 		for (int i = 0; i < length; i++) {
 			/*
 			 * 守门员 /n
 			 */
-			if (deletedSymbolResult[i][0].equals("守门员")){
-				deletedSymbolResult[i][1]="nr";
-			}
-			else if (deletedSymbolResult[i][0].equals("抱")){
-				deletedSymbolResult[i][1]="v";
-			}
-			else if (deletedSymbolResult[i][0].equals("黄牌警告")){
-				deletedSymbolResult[i][1]="v";
+			if (deletedSymbolResult[i][0].equals("守门员")||deletedSymbolResult[i][0].equals("门将")) {
+				deletedSymbolResult[i][1] = "nr";
+			} else if (deletedSymbolResult[i][0].equals("抱")) {
+				deletedSymbolResult[i][1] = "v";
+			} else if (deletedSymbolResult[i][0].equals("黄牌警告")) {
+				deletedSymbolResult[i][1] = "v";
 			}
 			/*
-			 * 攻/v 门/j 
+			 * 攻/v 门/j
 			 */
-			else if (deletedSymbolResult[i][1].equals("j")){
-				deletedSymbolResult[i][1]="v";
+			else if (deletedSymbolResult[i][1].equals("j")) {
+				deletedSymbolResult[i][1] = "v";
 			}
 			/*
 			 * Football中的身体部位
@@ -208,33 +206,41 @@ public class GetKeywords {
 			 * 可以简化程序，deletedSymbolResult[i][0]含有"脚"、"头"的，处理为一类特别的词性
 			 */
 			else if ((deletedSymbolResult[i][0].equals("左脚"))
-					||(deletedSymbolResult[i][0].equals("右脚"))
-					||(deletedSymbolResult[i][0].equals("头球"))
+					|| (deletedSymbolResult[i][0].equals("右脚"))
+					|| (deletedSymbolResult[i][0].equals("头球"))
 					/*
-			 * 1任意球	n  把这放在身体部位里
-			 */
-					||(deletedSymbolResult[i][1].equals("任意球"))
-					){
+					 * 1任意球 n 把这放在身体部位里
+					 */
+					|| (deletedSymbolResult[i][1].equals("任意球"))) {
 				/*
 				 * bp--bodypart
 				 */
-				deletedSymbolResult[i][1]="bp";
+				deletedSymbolResult[i][1] = "bp";
 			}
-			
+
 			/*
-			 * 得/u 分/v 
+			 * 得/u 分/v
 			 */
 			else if (deletedSymbolResult[i][1].equals("u")
-					&&((i+1<length)&&(deletedSymbolResult[i+1][1].equals("v")))){
-				deletedSymbolResult[i][1]="v";
+					&& ((i + 1 < length) && (deletedSymbolResult[i + 1][1]
+							.equals("v")))) {
+				deletedSymbolResult[i][1] = "v";
 			}
-			
+			/*
+			 * pbei 介词“被” ictclas4j没有表现出来
+			 */
+			else if (deletedSymbolResult[i][0].equals("被")) {
+				deletedSymbolResult[i][1] = "pbei";
+			}
+			/*
+			 * 用/p 脚/n  用：pyong 防止被识别为scene
+			 */
+			else if (deletedSymbolResult[i][0].equals("用")) {
+				deletedSymbolResult[i][1] = "pyong";
+			}
 		}
-			
+
 	}
-	
-	
-	
 
 	public String subject = "NO SUBJECT";
 	/*
@@ -275,11 +281,10 @@ public class GetKeywords {
 			deletedSymbolResult[i][1].equals("nr")
 			// 我/r
 					|| deletedSymbolResult[i][1].equals("r")
-					/*
-					 * 守门员/n
-					 * 这个处理起来有点麻烦，暂时考虑出出一个补一个
-					 */
-							){
+			/*
+			 * 守门员/n 这个处理起来有点麻烦，暂时考虑出出一个补一个
+			 */
+			) {
 
 				/*
 				 * 获取主体
@@ -334,9 +339,9 @@ public class GetKeywords {
 		 * 当遇到另外一个主体时，k++,表示切换主体
 		 * *******************************************************************
 		 */
-		while ((i < length)&&(k<subjectNo)) {
-			if(deletedSymbolResult[i][1].equals("nr")
-					|| deletedSymbolResult[i][1].equals("r")){
+		while ((i < length) && (k < subjectNo)) {
+			if (deletedSymbolResult[i][1].equals("nr")
+					|| deletedSymbolResult[i][1].equals("r")) {
 				k++;
 			}
 			/*
@@ -395,7 +400,8 @@ public class GetKeywords {
 							/*
 							 * 射门/v 得/u 分/v -----------射门/v 得/v 分/v
 							 */
-							&& ((deletedSymbolResult[i + 2][1].equals("n"))||(deletedSymbolResult[i + 2][1].equals("v")))) {
+							&& ((deletedSymbolResult[i + 2][1].equals("n")) || (deletedSymbolResult[i + 2][1]
+									.equals("v")))) {
 
 						keyword[k].setAction(actionNo,
 								deletedSymbolResult[i][0]
@@ -452,7 +458,12 @@ public class GetKeywords {
 			 * 姚明在体育馆打篮球。 在 体育馆 n
 			 */
 			if ((i + 1 < length)
-					&& (deletedSymbolResult[i][1].equals("p") && (deletedSymbolResult[i + 1][1]
+					/*
+					 * 被/p 门将/n 得到/v   
+					 * 
+					 * 此时，不能误识
+					 */
+					&& (deletedSymbolResult[i][1].equals("p")) &&(!(deletedSymbolResult[i][1].equals("pbei"))&& (deletedSymbolResult[i + 1][1]
 							.equals("n")
 					// 在/p 中场/s
 					// s 处所词
@@ -472,18 +483,18 @@ public class GetKeywords {
 			else if (deletedSymbolResult[i][1].equals("n")
 					&& ((i + 1 < length) && deletedSymbolResult[i + 1][1]
 							.equals("f"))) {
-				if((i-1>=0)&&(deletedSymbolResult[i-1][1].equals("a"))){
-					keyword[sceneNo].setScene(deletedSymbolResult[i-1][0]+deletedSymbolResult[i][0]
-					                         						+ deletedSymbolResult[i + 1][0]);
+				if ((i - 1 >= 0) && (deletedSymbolResult[i - 1][1].equals("a"))) {
+					keyword[sceneNo].setScene(deletedSymbolResult[i - 1][0]
+							+ deletedSymbolResult[i][0]
+							+ deletedSymbolResult[i + 1][0]);
 				}
 				/*
 				 * 禁区/n 内/f f 方位词
 				 */
-				else{
-				keyword[sceneNo].setScene(deletedSymbolResult[i][0]
-						+ deletedSymbolResult[i + 1][0]);
+				else {
+					keyword[sceneNo].setScene(deletedSymbolResult[i][0]
+							+ deletedSymbolResult[i + 1][0]);
 				}
-				
 
 			}
 			/*
@@ -512,19 +523,29 @@ public class GetKeywords {
 	 */
 	int bodyPartNo = 0;
 
+	/*
+	 * 主体个数的游标
+	 */
+	
 	public void insertBodyPart() {
-		for (int i = 0; i < length; i++) {
+		k=-1;
+		for (int i = 0; (i < length)&&(k<subjectNo); i++) {
 			/*
 			 * 禁区/n 内/f 左脚/n
 			 */
-		/*	if (deletedSymbolResult[i][0].equals("左脚")) {
-				keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]);
-
+			/*
+			 * if (deletedSymbolResult[i][0].equals("左脚")) {
+			 * keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]);
+			 * 
+			 * }
+			 */
+			if (deletedSymbolResult[i][1].equals("nr")
+					|| deletedSymbolResult[i][1].equals("r")) {
+				k++;
 			}
-			*/
 			
 			if (deletedSymbolResult[i][1].equals("bp")) {
-				keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]);
+				keyword[k].setBodyPart(deletedSymbolResult[i][0]);
 
 			}
 			/*
@@ -533,8 +554,15 @@ public class GetKeywords {
 			else if (deletedSymbolResult[i][1].equals("f")
 					&& ((i + 1 < length) && deletedSymbolResult[i + 1][1]
 							.equals("n"))) {
-				keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]
+				keyword[k].setBodyPart(deletedSymbolResult[i][0]
 						+ deletedSymbolResult[i + 1][0]);
+
+			}
+			/*
+			 * 中场/n 右/f 脚/n
+			 */
+			else if (deletedSymbolResult[i][1].equals("pyong")) {
+				keyword[k].setBodyPart(deletedSymbolResult[i+1][0]);
 
 			}
 
@@ -556,9 +584,6 @@ public class GetKeywords {
 		System.out.println("5.守门员将球死死抱住");
 		System.out.println("5.何塞·保罗·格雷罗经过连续传球精密配合，丹尼·墨菲助攻西蒙·戴维斯破门得分");
 		System.out.println("4.范尼斯特鲁伊小禁区内右脚射门");
-		
-
-
 
 		GetKeywords key = new GetKeywords();
 		key.getWordSegResult();
@@ -566,7 +591,7 @@ public class GetKeywords {
 		System.out.println("获取分词的最终结果:\n" + key.wordSegResult + "\n");
 
 		key.deleteSymbols();
-		
+
 		key.plusDictionary();
 
 		// key.getSubject();
@@ -588,33 +613,16 @@ public class GetKeywords {
 		 * 
 		 * 突然发现，这样写，恰恰表现了动作的时间性
 		 * 
-		 *  如
-主体0:何塞·保罗·格雷罗
-行为0-0:传球
-行为0-1:配合
-行为0-2:null
-行为0-3:null
-场景0:null
-身体部位0:null
-
-主体1:丹尼·墨菲
-行为1-0:null
-行为1-1:null
-行为1-2:助攻
-行为1-3:null
-场景1:null
-身体部位1:null
-
-主体2:西蒙·戴维斯
-行为2-0:null
-行为2-1:null
-行为2-2:null
-行为2-3:破门得分
-场景2:null
-身体部位2:null
-		 *
-		 *0-0:传球 	 0-1:配合	1-2:助攻		2-3:破门得分
-
+		 * 如 主体0:何塞·保罗·格雷罗 行为0-0:传球 行为0-1:配合 行为0-2:null 行为0-3:null 场景0:null
+		 * 身体部位0:null
+		 * 
+		 * 主体1:丹尼·墨菲 行为1-0:null 行为1-1:null 行为1-2:助攻 行为1-3:null 场景1:null
+		 * 身体部位1:null
+		 * 
+		 * 主体2:西蒙·戴维斯 行为2-0:null 行为2-1:null 行为2-2:null 行为2-3:破门得分 场景2:null
+		 * 身体部位2:null
+		 * 
+		 * 0-0:传球 0-1:配合 1-2:助攻 2-3:破门得分
 		 */
 		for (int i = 0; i < key.subjectNo; i++) {
 			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
