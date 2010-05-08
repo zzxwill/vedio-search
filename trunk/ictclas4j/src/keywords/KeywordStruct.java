@@ -4,6 +4,12 @@ public class KeywordStruct {
 	public String subject;
 	public String action[]=new String[127];
 	public String scene;
+	/*
+	 * 增加身体部位
+	 *
+	 */
+	public String bodyPart;
+	
 	
 	public String getSubject() {
 		return subject;
@@ -28,6 +34,15 @@ public class KeywordStruct {
 	public void setScene(String scene) {
 		this.scene = scene;
 	}
+	
+	public String getBodyPart() {
+		return bodyPart;
+	}
+
+	public void setBodyPart(String bodyPart) {
+		this.bodyPart = bodyPart;
+	}
+
 	
 	
 
