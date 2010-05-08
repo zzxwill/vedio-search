@@ -10,17 +10,18 @@ public class GetKeywords {
 	/*
 	 * 用于存入主体、行为、场景的数据结构。
 	 */
-	KeywordStruct keyword[]=new KeywordStruct[3];
-	
+	KeywordStruct keyword[] = new KeywordStruct[3];
+
 	/*
 	 * 初始化keyword
 	 */
-	public GetKeywords(){
-		for(int i=0;i<3;i++){
-			keyword[i]=new KeywordStruct();
+	public GetKeywords() {
+		for (int i = 0; i < 3; i++) {
+			keyword[i] = new KeywordStruct();
 		}
-		
+
 	}
+
 	/*
 	 * 分词的最终结果,只允许同一个类调用。
 	 */
@@ -44,22 +45,14 @@ public class GetKeywords {
 	 * 文本的长度。
 	 */
 	int length = 0;
-	
-	
-	/*
-	 * 用于存放主体、行为、场景
-	 * keywords[0][0]:他
-	 * keywords[0][1]:看书-写代码
-	 * keywords[0][2]:教室
-	 * 
-	 * keywords[0][0]:他
-	 * keywords[0][1]:问问题-测试
-	 * keywords[0][2]:
-	 */
-	
-	public String keywords[][]=new String[3][128];
 
-	
+	/*
+	 * 用于存放主体、行为、场景 keywords[0][0]:他 keywords[0][1]:看书-写代码 keywords[0][2]:教室
+	 * 
+	 * keywords[0][0]:他 keywords[0][1]:问问题-测试 keywords[0][2]:
+	 */
+
+	public String keywords[][] = new String[3][128];
 
 	// private String
 	/*
@@ -81,7 +74,6 @@ public class GetKeywords {
 					 * 获取分词的最终结果。
 					 */
 					// key.wordSegResult=seg_res.getFinalResult();
-
 					// System.out.println(seg_res.getFinalResult());
 					wordSegResult = seg_res.getFinalResult();
 					return wordSegResult;
@@ -109,7 +101,6 @@ public class GetKeywords {
 		 * 以斜杠切分
 		 */
 		// String slashSeg[]=new String[2];
-
 		int j = 0;
 
 		// GetKeywords key1=new GetKeywords();
@@ -128,7 +119,6 @@ public class GetKeywords {
 		 */
 
 		// System.out.println(wordSegResult);
-
 		// String str1=getWordSegResult();
 		// System.out.println(wordSegResult);
 		String str1Array[] = wordSegResult.split("\\s");
@@ -190,8 +180,8 @@ public class GetKeywords {
 	/*
 	 * 主体的个数
 	 */
-	public int subjectNo=0;
-	
+	public int subjectNo = 0;
+
 	public void getSubject() {
 		System.out.println("\n主体：");
 
@@ -203,13 +193,12 @@ public class GetKeywords {
 					// 我/r
 					|| deletedSymbolResult[i][1].equals("r")) {
 				deletedSymbolResult[i][2] = "SUBJECT";
-				
+
 				subject = deletedSymbolResult[i][0];
-				if(subjectNo==0){
-					keywords[subjectNo++][0]=subject;
-				}
-				else{
-					keywords[subjectNo++][0]+='-'+subject;
+				if (subjectNo == 0) {
+					keywords[subjectNo++][0] = subject;
+				} else {
+					keywords[subjectNo++][0] += '-' + subject;
 				}
 				System.out.println(subject);
 				break;
@@ -218,8 +207,7 @@ public class GetKeywords {
 		}
 
 	}
-	
-	
+
 	/*
 	 * 将获取的主体插入到数据结构中
 	 */
@@ -228,33 +216,31 @@ public class GetKeywords {
 
 		for (int i = 0; i < length; i++) {
 			//
-			if (deletedSymbolResult[i][1].equals("n")
+			if (//deletedSymbolResult[i][1].equals("n")
 			// 姚明/nr
-					|| deletedSymbolResult[i][1].equals("nr")
+					//
+					deletedSymbolResult[i][1].equals("nr")
 					// 我/r
 					|| deletedSymbolResult[i][1].equals("r")) {
-				
+
 				/*
 				 * 获取主体
 				 */
 				keyword[subjectNo].setSubject(deletedSymbolResult[i][0]);
-				
+
 				subjectNo++;
-//				deletedSymbolResult[i][2] = "SUBJECT";
-				
-//				subject = deletedSymbolResult[i][0];
-				
-/*
- * 				if(subjectNo==0){
- 
-					keywords[subjectNo++][0]=subject;
-				}
-				else{
-					keywords[subjectNo++][0]+='-'+subject;
-				}
-		*/
-//				System.out.println(subject);
-//				break;
+				// deletedSymbolResult[i][2] = "SUBJECT";
+
+				// subject = deletedSymbolResult[i][0];
+
+				/*
+				 * if(subjectNo==0){
+				 * 
+				 * keywords[subjectNo++][0]=subject; } else{
+				 * keywords[subjectNo++][0]+='-'+subject; }
+				 */
+				// System.out.println(subject);
+				// break;
 			}
 
 		}
@@ -286,87 +272,88 @@ public class GetKeywords {
 			// action=deletedSymbolResult[i][0];
 			// System.out.println(action);
 			// break;
-
 			// }
-			
 			/*
 			 * 奥尼尔投篮被他盖帽。
 			 * 
 			 * 主体不止一个，所以要区分主语和所属的行为
 			 */
-			if(deletedSymbolResult[i][1].equals("v"))
-			/*
-			 * 吃/v 苹果/n
-			 */
-			// else
-
-			if (deletedSymbolResult[i][1].equals("v")
-			/*
-			 * 击/vg 地/n
-			 */
-			|| deletedSymbolResult[i][1].equals("vg")
-			/*
-			 * 传球/vn
-			 */
-			|| deletedSymbolResult[i][1].equals("vn")
-			/*
-			 * 抢/vd 到/v 篮板球/n
-			 */
-			|| deletedSymbolResult[i][1].equals("vd")) {
-				deletedSymbolResult[i][2] = "ACTION";
+			if (deletedSymbolResult[i][1].equals("v"))
 				/*
-				 * ********************************************
-				 * **********************************************
-				 * 这个地方可能有问题。 因为名词不一定只是n
-				 * *******************************************
-				 * ******************************************
+				 * 吃/v 苹果/n
 				 */
+				// else
+				if (deletedSymbolResult[i][1].equals("v")
 				/*
-				 * 当i=1时，为什么还会执行&&后面的语句？ 因为，deletedSymbolResult.length=65535！
+				 * 击/vg 地/n
 				 */
-				if (((i + 1) < length)
-						&& (deletedSymbolResult[i + 1][1].equals("n")
-						/*
-						 * 抢/vd 到/v 篮板球/n
-						 */
-						|| deletedSymbolResult[i + 1][1].equals("v"))) {
-					if (((i + 2) < length)
-							&& (deletedSymbolResult[i + 2][1].equals("n"))) {
-						action = deletedSymbolResult[i][0]
-								+ deletedSymbolResult[i + 1][0]
-								+ deletedSymbolResult[i + 2][0];
-						i=i+3;
-					} else {
-						deletedSymbolResult[i + 1][2] = "ACTION";
-						action = deletedSymbolResult[i][0]
-								+ deletedSymbolResult[i + 1][0];
-						i=i+2;
-					}
-					System.out.println(action);
-					// break;
-					// i=i+2;
-
-				} else {
-					action = deletedSymbolResult[i][0];
-					System.out.println(action);
-					// break;
-
+				|| deletedSymbolResult[i][1].equals("vg")
+				/*
+				 * 传球/vn
+				 */
+				|| deletedSymbolResult[i][1].equals("vn")
+				/*
+				 * 抢/vd 到/v 篮板球/n
+				 */
+				|| deletedSymbolResult[i][1].equals("vd")) {
+					deletedSymbolResult[i][2] = "ACTION";
 					/*
-					 * 怎么写？
+					 * ********************************************
+					 * ********************************************** 这个地方可能有问题。
+					 * 因为名词不一定只是n *******************************************
+					 * ******************************************
 					 */
+					/*
+					 * 当i=1时，为什么还会执行&&后面的语句？
+					 * 因为，deletedSymbolResult.length=65535！
+					 */
+					if (((i + 1) < length)
+							&& (deletedSymbolResult[i + 1][1].equals("n")
+							/*
+							 * 抢/vd 到/v 篮板球/n
+							 */
+							|| deletedSymbolResult[i + 1][1].equals("v"))) {
+						if (((i + 2) < length)
+								&& (deletedSymbolResult[i + 2][1].equals("n"))) {
+							action = deletedSymbolResult[i][0]
+									+ deletedSymbolResult[i + 1][0]
+									+ deletedSymbolResult[i + 2][0];
+							i = i + 3;
+						} else {
+							deletedSymbolResult[i + 1][2] = "ACTION";
+							action = deletedSymbolResult[i][0]
+									+ deletedSymbolResult[i + 1][0];
+							i = i + 2;
+						}
+						System.out.println(action);
+						// break;
+						// i=i+2;
+
+					} else {
+						action = deletedSymbolResult[i][0];
+						System.out.println(action);
+						// break;
+
+						/*
+						 * 怎么写？
+						 */
+					}
 				}
-			}
 		}
 
 	}
-	
+
 	/*
 	 * 某个主体的行为个数
 	 */
-	
-	public int actionNo=0;
-	
-	public int k=0;
+
+	public int actionNo = 0;
+
+	/*
+	 * k是行为个数的游标
+	 */
+	public int k = 0;
+
 	public void insertAction() {
 
 		System.out.println("\n行为：");
@@ -386,82 +373,81 @@ public class GetKeywords {
 			// action=deletedSymbolResult[i][0];
 			// System.out.println(action);
 			// break;
-
 			// }
-			
 			/*
 			 * 奥尼尔投篮被他盖帽。
 			 * 
 			 * 主体不止一个，所以要区分主语和所属的行为
 			 */
-			if(deletedSymbolResult[i][1].equals("v"))
-			/*
-			 * 吃/v 苹果/n
-			 */
-			// else
-
-			if (deletedSymbolResult[i][1].equals("v")
-			/*
-			 * 击/vg 地/n
-			 */
-			|| deletedSymbolResult[i][1].equals("vg")
-			/*
-			 * 传球/vn
-			 */
-			|| deletedSymbolResult[i][1].equals("vn")
-			/*
-			 * 抢/vd 到/v 篮板球/n
-			 */
-			|| deletedSymbolResult[i][1].equals("vd")) {
-				
-//				deletedSymbolResult[i][2] = "ACTION";
+			if (deletedSymbolResult[i][1].equals("v"))
 				/*
-				 * ********************************************
-				 * **********************************************
-				 * 这个地方可能有问题。 因为名词不一定只是n
-				 * *******************************************
-				 * ******************************************
+				 * 吃/v 苹果/n
 				 */
+				// else
+				if (deletedSymbolResult[i][1].equals("v")
 				/*
-				 * 当i=1时，为什么还会执行&&后面的语句？ 因为，deletedSymbolResult.length=65535！
+				 * 击/vg 地/n
 				 */
-				if (((i + 1) < length)
-						&&(k<actionNo)
-						&& (deletedSymbolResult[i + 1][1].equals("n")
-						/*
-						 * 抢/vd 到/v 篮板球/n
-						 */
-						|| deletedSymbolResult[i + 1][1].equals("v"))) {
-					if (((i + 2) < length)
-							&& (deletedSymbolResult[i + 2][1].equals("n"))) {
-						
-						keyword[k].setAction(actionNo,deletedSymbolResult[i][0]
-						                    								+ deletedSymbolResult[i + 1][0]
-						                    																+ deletedSymbolResult[i + 2][0]);
-						
-				
-						i=i+3;
-					} else {
-//						deletedSymbolResult[i + 1][2] = "ACTION";
-						keyword[k].setAction(actionNo,deletedSymbolResult[i][0]
-								+ deletedSymbolResult[i + 1][0]);
-						i=i+2;
-					}
-//					System.out.println(action);
-					// break;
-					// i=i+2;
+				|| deletedSymbolResult[i][1].equals("vg")
+				/*
+				 * 传球/vn
+				 */
+				|| deletedSymbolResult[i][1].equals("vn")
+				/*
+				 * 抢/vd 到/v 篮板球/n
+				 */
+				|| deletedSymbolResult[i][1].equals("vd")) {
 
-				} else {
-					keyword[k].setAction(actionNo,deletedSymbolResult[i][0]);
-//					System.out.println(action);
-					// break;
-
+					// deletedSymbolResult[i][2] = "ACTION";
 					/*
-					 * 怎么写？
+					 * ********************************************
+					 * ********************************************** 这个地方可能有问题。
+					 * 因为名词不一定只是n *******************************************
+					 * ******************************************
 					 */
+					/*
+					 * 当i=1时，为什么还会执行&&后面的语句？
+					 * 因为，deletedSymbolResult.length=65535！
+					 */
+					if (((i + 1) < length)
+							&& (deletedSymbolResult[i + 1][1].equals("n")
+							/*
+							 * 抢/vd 到/v 篮板球/n
+							 */
+							|| deletedSymbolResult[i + 1][1].equals("v"))) {
+						if (((i + 2) < length)
+								&& (deletedSymbolResult[i + 2][1].equals("n"))) {
+
+							keyword[k].setAction(actionNo,
+									deletedSymbolResult[i][0]
+											+ deletedSymbolResult[i + 1][0]
+											+ deletedSymbolResult[i + 2][0]);
+
+							i = i + 3;
+						} else {
+							// deletedSymbolResult[i + 1][2] = "ACTION";
+							keyword[k].setAction(actionNo,
+									deletedSymbolResult[i][0]
+											+ deletedSymbolResult[i + 1][0]);
+							i = i + 2;
+						}
+						// System.out.println(action);
+						// break;
+						// i=i+2;
+
+					} else {
+						keyword[k].setAction(actionNo,
+								deletedSymbolResult[i][0]);
+						// System.out.println(action);
+						// break;
+
+						/*
+						 * 怎么写？
+						 */
+						i++;
+					}
 				}
-			}
-			subjectNo++;
+			actionNo++;
 		}
 
 	}
@@ -505,24 +491,25 @@ public class GetKeywords {
 
 		key.deleteSymbols();
 
-//		key.getSubject();
+		// key.getSubject();
 
-//		key.getAction();
+		// key.getAction();
 
-		key.getScene();
-		
-		System.out.println("********************************************************\n**********************************************************************");
+//		key.getScene();
+
+		System.out
+				.println("**********************************************************************\n**********************************************************************");
 		key.insertSubject();
 		key.insertAction();
-		for(int i=0;i<key.subjectNo;i++){
-			System.out.println("主体"+i+":"+key.keyword[i].getSubject());
-			for(int j=0;j<key.actionNo;j++){
-				System.out.println("行为"+i+":"+key.keyword[i].getAction(j));
+		for (int i = 0; i < key.subjectNo; i++) {
+			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
+			for (int j = 0; j < key.actionNo-1; j++) {
+				System.out
+						.println("行为" + i+"-"+j + ":" + key.keyword[i].getAction(j));
 			}
-			System.out.println("场景"+i+":"+key.keyword[i].getSubject());
+			System.out.println("场景" + i + ":" + key.keyword[i].getSubject());
 		}
 
 	}
-		
 
 }
