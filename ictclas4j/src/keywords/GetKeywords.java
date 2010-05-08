@@ -182,7 +182,9 @@ public class GetKeywords {
 	 */
 	public int subjectNo = 0;
 
-	public void getSubject() {
+/*
+ * 	public void getSubject() {
+
 		System.out.println("\n主体：");
 
 		for (int i = 0; i < length; i++) {
@@ -207,7 +209,8 @@ public class GetKeywords {
 		}
 
 	}
-
+	
+ */
 	/*
 	 * 将获取的主体插入到数据结构中
 	 */
@@ -221,7 +224,11 @@ public class GetKeywords {
 			//
 			deletedSymbolResult[i][1].equals("nr")
 			// 我/r
-					|| deletedSymbolResult[i][1].equals("r")) {
+					|| deletedSymbolResult[i][1].equals("r")
+					/*
+					 * 守门员/n
+					 */
+					||deletedSymbolResult[i][1].equals("n")) {
 
 				/*
 				 * 获取主体
@@ -247,6 +254,8 @@ public class GetKeywords {
 
 	}
 
+	/*
+	
 	/*
 	 * 获取表示行为的词
 	 */
@@ -342,7 +351,7 @@ public class GetKeywords {
 		}
 
 	}
-
+	 
 	/*
 	 * 某个主体的行为个数
 	 */
@@ -361,9 +370,9 @@ public class GetKeywords {
 		 * 遍历以查找动词
 		 */
 
-//		for (int i = 0; i < length; i++) {
-		int i=0;
-		while(i<length){
+		// for (int i = 0; i < length; i++) {
+		int i = 0;
+		while (i < length) {
 			/*
 			 * 吃饭/v
 			 */
@@ -449,8 +458,7 @@ public class GetKeywords {
 					i++;
 					actionNo++;
 				}
-			}
-			else{
+			} else {
 				i++;
 			}
 
@@ -468,13 +476,13 @@ public class GetKeywords {
 
 		for (int i = 0; i < length; i++) {
 			/*
-			 * 他/r 在/p 中场/s 传球/vn 射门/vn 。/w 
+			 * 他/r 在/p 中场/s 传球/vn 射门/vn 。/w
 			 */
 			if ((i + 1 < length) && deletedSymbolResult[i][1].equals("p")
 					&& (deletedSymbolResult[i + 1][1].equals("n")
-							//在/p 中场/s
-							//s 处所词
-							||(deletedSymbolResult[i + 1][1].equals("s")))){
+					// 在/p 中场/s
+					// s 处所词
+					|| (deletedSymbolResult[i + 1][1].equals("s")))) {
 				deletedSymbolResult[i + 1][2] = "SCENE";
 				scene = deletedSymbolResult[i + 1][0];
 				System.out.println(scene);
@@ -486,8 +494,7 @@ public class GetKeywords {
 		System.out.println(scene);
 
 	}
-	
-	
+
 	/*
 	 * 获取主体行为发生的场景。
 	 */
@@ -495,40 +502,84 @@ public class GetKeywords {
 	/*
 	 * 场景个数
 	 */
-	int sceneNo=0;
+	int sceneNo = 0;
+
 	public void insertScene() {
-//		System.out.println("\n场景：");
+		// System.out.println("\n场景：");
 
 		for (int i = 0; i < length; i++) {
 			/*
 			 * 姚明在体育馆打篮球。 在 体育馆 n
 			 */
-			if ((i + 1 < length) && deletedSymbolResult[i][1].equals("p")
-					&& (deletedSymbolResult[i + 1][1].equals("n")
-							//在/p 中场/s
-							//s 处所词
-							||(deletedSymbolResult[i + 1][1].equals("s")))){
-//				deletedSymbolResult[i + 1][2] = "SCENE";
+			if ((i + 1 < length)
+					&& (deletedSymbolResult[i][1].equals("p") && (deletedSymbolResult[i + 1][1]
+							.equals("n")
+					// 在/p 中场/s
+					// s 处所词
+					|| (deletedSymbolResult[i + 1][1].equals("s"))))) {
+				// deletedSymbolResult[i + 1][2] = "SCENE";
 				keyword[sceneNo].setScene(deletedSymbolResult[i + 1][0]);
 				sceneNo++;
-//				System.out.println(scene);
+				// System.out.println(scene);
 				// break;
+
+			}
+			/*
+			 * 禁区/n 内/f
+			 * f 方位词
+			 */
+			else if (deletedSymbolResult[i][1].equals("n")
+					&& ((i + 1 < length) && deletedSymbolResult[i+1][1]
+							.equals("f"))) {
+				keyword[sceneNo].setScene(deletedSymbolResult[i][0]+deletedSymbolResult[i+1][0]);
 
 			}
 
 		}
-//		System.out.println(scene);
+		// System.out.println(scene);
 
 	}
 	
-	
+	/*
+	 * 获取主体行为发生时所用的身体部位。
+	 */
+
+	/*
+	 * 场景个数
+	 */
+	int bodyPartNo = 0;
+
+	public void insertBodyPart() {
+		for (int i = 0; i < length; i++) {
+			/*
+			 * 禁区/n 内/f 左脚/n
+			 */
+			if(deletedSymbolResult[i][0].equals("左脚")){
+				keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]);
+
+			}
+			/*
+			 * 右/f 脚/n 
+			 */
+			else if (deletedSymbolResult[i][1].equals("f")
+					&& ((i + 1 < length) && deletedSymbolResult[i+1][1]
+							.equals("n"))) {
+				keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]+deletedSymbolResult[i+1][0]);
+
+			}
+			
+
+		}
+		// System.out.println(scene);
+
+	}
 
 	public static void main(String args[]) {
 		System.out.println("文本输入样例：");
 		System.out.println("1.姚明在体育馆打篮球");
 		System.out.println("2.我踢足球");
-		System.out.println("3.她在操场跑步");
-		System.out.println("4.我踢足球打篮球");
+		System.out.println("3.范尼斯特鲁伊禁区内右脚射门");
+		System.out.println("4.何塞·保罗·格雷罗替换下托马斯·吕康");
 		System.out.println("5.他在中场传球射门");
 
 		GetKeywords key = new GetKeywords();
@@ -549,6 +600,7 @@ public class GetKeywords {
 		key.insertSubject();
 		key.insertAction();
 		key.insertScene();
+		key.insertBodyPart();
 		for (int i = 0; i < key.subjectNo; i++) {
 			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
 			for (int j = 0; j < key.actionNo; j++) {
@@ -556,6 +608,9 @@ public class GetKeywords {
 						+ key.keyword[i].getAction(j));
 			}
 			System.out.println("场景" + i + ":" + key.keyword[i].getScene());
+			System.out.println("身体部位" + i + ":" + key.keyword[i].getBodyPart());
+			System.out.println();
+
 		}
 
 	}
