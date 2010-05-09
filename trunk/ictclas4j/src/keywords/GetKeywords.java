@@ -238,6 +238,24 @@ public class GetKeywords {
 			else if (deletedSymbolResult[i][0].equals("用")) {
 				deletedSymbolResult[i][1] = "pyong";
 			}
+			/*
+			 * 双/m 拳击/n 出/v 
+			 * 
+			 * 既然是"双"，就只有可能是"手"了。
+			 */
+			else if (deletedSymbolResult[i][1].equals("m")&&(i+1<length)) {
+				deletedSymbolResult[i+1][0] = deletedSymbolResult[i][0]+"手";
+				deletedSymbolResult[i+1][1] = "bp";
+			}
+			/*
+			 * 禁区/n 边缘/n 右/f 脚/n
+			 * 
+			 * 将边缘"方位化"
+			 */
+			else if (deletedSymbolResult[i][0].equals("边缘")) {
+				deletedSymbolResult[i][1] = "f";
+			}
+			
 		}
 
 	}
@@ -481,8 +499,11 @@ public class GetKeywords {
 			 * 小/a 禁区/n 内/f
 			 */
 			else if (deletedSymbolResult[i][1].equals("n")
-					&& ((i + 1 < length) && deletedSymbolResult[i + 1][1]
-							.equals("f"))) {
+					&& ((i + 1 < length) && (deletedSymbolResult[i + 1][1]
+							.equals("f")
+						
+							
+							))) {
 				if ((i - 1 >= 0) && (deletedSymbolResult[i - 1][1].equals("a"))) {
 					keyword[sceneNo].setScene(deletedSymbolResult[i - 1][0]
 							+ deletedSymbolResult[i][0]
