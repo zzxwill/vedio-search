@@ -1,16 +1,21 @@
 package keywords;
 
 public class KeywordStruct {
-	public String subject;
+	public String subject=new String();
 	public String action[]=new String[127];
-	public String scene;
+//	
+	public String scene=new String();
 	/*
 	 * 增加身体部位
 	 *
 	 */
-	public String bodyPart;
+	public String bodyPart=new String();
 	
-	
+	public KeywordStruct(){
+		action[0]=new String();
+		action[1]=new String();
+		action[2]=new String();
+	}
 	public String getSubject() {
 		return subject;
 	}
@@ -20,6 +25,7 @@ public class KeywordStruct {
 	}
 	
 	public String getAction(int i) {
+		
 		return action[i];
 	}
 	
