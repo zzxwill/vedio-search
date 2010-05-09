@@ -187,11 +187,10 @@ public class GetKeywords {
 			/*
 			 * 守门员 /n
 			 */
-			if (deletedSymbolResult[i][0].equals("守门员")||deletedSymbolResult[i][0].equals("门将")) {
+			if (deletedSymbolResult[i][0].equals("守门员")
+					|| deletedSymbolResult[i][0].equals("门将")) {
 				deletedSymbolResult[i][1] = "nr";
 			} else if (deletedSymbolResult[i][0].equals("抱")) {
-				deletedSymbolResult[i][1] = "v";
-			} else if (deletedSymbolResult[i][0].equals("黄牌警告")) {
 				deletedSymbolResult[i][1] = "v";
 			}
 			/*
@@ -213,9 +212,9 @@ public class GetKeywords {
 					 */
 					|| (deletedSymbolResult[i][1].equals("任意球"))) {
 				/*
-				 * bp--bodypart
+				 * bodyPart_word--bodypart
 				 */
-				deletedSymbolResult[i][1] = "bp";
+				deletedSymbolResult[i][1] = "bodyPart_word";
 			}
 
 			/*
@@ -231,21 +230,29 @@ public class GetKeywords {
 			 */
 			else if (deletedSymbolResult[i][0].equals("被")) {
 				deletedSymbolResult[i][1] = "pbei";
+
 			}
 			/*
-			 * 用/p 脚/n  用：pyong 防止被识别为scene
+			 * 将/p 球/n 射/v 入/v
+			 */
+			else if (deletedSymbolResult[i][0].equals("将")) {
+				deletedSymbolResult[i][1] = "pbei";
+
+			}
+			/*
+			 * 用/p 脚/n 用：pyong 防止被识别为scene
 			 */
 			else if (deletedSymbolResult[i][0].equals("用")) {
 				deletedSymbolResult[i][1] = "pyong";
 			}
 			/*
-			 * 双/m 拳击/n 出/v 
+			 * 双/m 拳击/n 出/v
 			 * 
 			 * 既然是"双"，就只有可能是"手"了。
 			 */
-			else if (deletedSymbolResult[i][1].equals("m")&&(i+1<length)) {
-				deletedSymbolResult[i+1][0] = deletedSymbolResult[i][0]+"手";
-				deletedSymbolResult[i+1][1] = "bp";
+			else if (deletedSymbolResult[i][1].equals("双")) {
+				deletedSymbolResult[i + 1][0] = deletedSymbolResult[i][0] + "手";
+				deletedSymbolResult[i + 1][1] = "bodyPart_word";
 			}
 			/*
 			 * 禁区/n 边缘/n 右/f 脚/n
@@ -255,7 +262,80 @@ public class GetKeywords {
 			else if (deletedSymbolResult[i][0].equals("边缘")) {
 				deletedSymbolResult[i][1] = "f";
 			}
-			
+			/*
+			 * 中场/s
+			 */
+			else if (deletedSymbolResult[i][0].equals("中场")) {
+				/*
+				 * 标记为scene词语
+				 */
+				deletedSymbolResult[i][1] = "scene_word";
+			}
+			/*
+			 * ，/w 球/n 未/d 打入/v
+			 * 
+			 * ","后面的名词是 主体
+			 */
+			else if (deletedSymbolResult[i][1].equals("w") && (i + 1 < length)
+					&& deletedSymbolResult[i + 1][1].equals("n")) {
+				deletedSymbolResult[i + 1][1] = "nr";
+			}
+			/*
+			 * 球/n 未/d 打入/v
+			 * 
+			 * n在最开始
+			 */
+			else if (deletedSymbolResult[0][1].equals("n")) {
+				deletedSymbolResult[i][1] = "nr";
+			}
+			/*
+			 * 未/d 打入/v
+			 * 
+			 * 表示否定的副词很重要，将其定义为动词前缀
+			 */
+			else if (deletedSymbolResult[i][0].equals("未")
+					|| deletedSymbolResult[i][0].equals("没有")) {
+				/*
+				 * 标记为scene词语
+				 */
+				deletedSymbolResult[i][1] = "vPrefix_word";
+			}
+			/*
+			 * 点球
+			 */
+			else if (deletedSymbolResult[i][0].equals("点球")) {
+
+				deletedSymbolResult[i][1] = "v";
+			}
+			/*
+			 * 点/t 球/n
+			 */
+			else if (deletedSymbolResult[i][0].equals("点") && (i + 1 < length)
+					&& deletedSymbolResult[i + 1][0].equals("球")) {
+				deletedSymbolResult[i][1] = "v";
+				deletedSymbolResult[i][0] = deletedSymbolResult[i][0]
+						+ deletedSymbolResult[i + 1][0];
+				/*
+				 * 忽略
+				 */
+				deletedSymbolResult[i + 1][1] = "null_word";
+
+			}
+			/*
+			 * 黄牌警告
+			 */
+			else if (deletedSymbolResult[i][0].equals("黄牌警告")) {
+				deletedSymbolResult[i][1] = "vJudge_word";
+
+			}
+			/*
+			 * 红牌
+			 */
+			else if (deletedSymbolResult[i][0].equals("红牌")) {
+				deletedSymbolResult[i][1] = "v";
+
+			}
+
 		}
 
 	}
@@ -293,7 +373,7 @@ public class GetKeywords {
 
 		for (int i = 0; i < length; i++) {
 			//
-			if (// deletedSymbolResult[i][1].equals("n")
+			if (
 			// 姚明/nr
 			//
 			deletedSymbolResult[i][1].equals("nr")
@@ -324,6 +404,61 @@ public class GetKeywords {
 				// break;
 			}
 
+			else if (deletedSymbolResult[i][1].equals("pbei")
+					&& (i + 1 < length)
+					&& deletedSymbolResult[i + 1][1].equals("v")) {
+
+				keyword[subjectNo].setSubject("守门员");
+				subjectNo++;
+
+			}
+
+			/*
+			 * 被/p 黄牌警告/l
+			 */
+
+			else if (deletedSymbolResult[i][1].equals("pbei")
+					&& (i + 1 < length)
+					&& deletedSymbolResult[i + 1][1].equals("vJudge_word")) {
+
+				keyword[subjectNo].setSubject("裁判");
+				subjectNo++;
+
+			}
+
+			/*
+			 * 被/p 挡/v 出/v 被/p 门将/n 得到/v
+			 * 
+			 * 
+			 * 如果"被"之后没有主体，而是直接跟的"v"，那么应该补充主体
+			 * 
+			 * 有两种选择：
+			 * 
+			 * 1.按如下代码 2.i+1是动词 也让subjectNo++，但是，让主体空缺，留着后续处理
+			 */
+			else if (deletedSymbolResult[i][1].equals("pbei")
+					&& (i + 1 < length)
+					&& deletedSymbolResult[i + 1][1].equals("v")) {
+
+				keyword[subjectNo].setSubject("守门员");
+				subjectNo++;
+
+			}
+
+		}
+
+	}
+
+	/*
+	 * 处理动词前缀
+	 */
+	String vPrefixWord = new String();
+
+	public String verbPrefix(int index) {
+		if (index >= 0 && deletedSymbolResult[index][1].equals("vPrefix_word")) {
+			return deletedSymbolResult[index][0];
+		} else {
+			return vPrefixWord;
 		}
 
 	}
@@ -358,10 +493,24 @@ public class GetKeywords {
 		 * *******************************************************************
 		 */
 		while ((i < length) && (k < subjectNo)) {
-			if (deletedSymbolResult[i][1].equals("nr")
-					|| deletedSymbolResult[i][1].equals("r")) {
+			if (deletedSymbolResult[i][0].equals(keyword[0].getSubject())
+					|| deletedSymbolResult[i][0]
+							.equals(keyword[1].getSubject())
+					|| deletedSymbolResult[i][0]
+							.equals(keyword[2].getSubject())) {
 				k++;
 			}
+			/*
+			 * 碰到"被"了，也要K++,表示主体发生了变化 * 被/p 挡/v 出/v 被/p 门将/n 得到/v
+			 * 
+			 * 门将 变成了 nr
+			 */
+			if (deletedSymbolResult[i][1].equals("pbei") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				k++;
+			}
+
 			/*
 			 * 吃饭/v
 			 */
@@ -396,7 +545,9 @@ public class GetKeywords {
 			/*
 			 * 抢/vd 到/v 篮板球/n
 			 */
-			|| deletedSymbolResult[i][1].equals("vd")) {
+			|| deletedSymbolResult[i][1].equals("vd")
+
+			|| deletedSymbolResult[i][1].equals("vJudge_word")) {
 
 				// deletedSymbolResult[i][2] = "ACTION";
 				/*
@@ -408,31 +559,38 @@ public class GetKeywords {
 				/*
 				 * 当i=1时，为什么还会执行&&后面的语句？ 因为，deletedSymbolResult.length=65535！
 				 */
-				if (((i + 1) < length)
+				if ((i + 1 < length)
 						&& ((deletedSymbolResult[i + 1][1].equals("n")
 						/*
 						 * 抢/vd 到/v 篮板球/n
 						 */
-						|| deletedSymbolResult[i + 1][1].equals("v")))) {
+						|| deletedSymbolResult[i + 1][1].equals("v")
+						/*
+						 * 飞/v 身/ng 得到/v
+						 */
+						|| deletedSymbolResult[i + 1][1].equals("ng")
+						))) {
 					if (((i + 2) < length)
 							/*
 							 * 射门/v 得/u 分/v -----------射门/v 得/v 分/v
 							 */
-							&& ((deletedSymbolResult[i + 2][1].equals("n")) || (deletedSymbolResult[i + 2][1]
-									.equals("v")))) {
+							&& ((deletedSymbolResult[i + 2][1].equals("n"))
+									|| (deletedSymbolResult[i + 2][1]
+											.equals("v"))
+							)) {
 
-						keyword[k].setAction(actionNo,
-								deletedSymbolResult[i][0]
-										+ deletedSymbolResult[i + 1][0]
-										+ deletedSymbolResult[i + 2][0]);
+						keyword[k].setAction(actionNo, verbPrefix(i - 1)
+								+ deletedSymbolResult[i][0]
+								+ deletedSymbolResult[i + 1][0]
+								+ deletedSymbolResult[i + 2][0]);
 
 						i = i + 3;
 						actionNo++;
 					} else {
 						// deletedSymbolResult[i + 1][2] = "ACTION";
-						keyword[k].setAction(actionNo,
-								deletedSymbolResult[i][0]
-										+ deletedSymbolResult[i + 1][0]);
+						keyword[k].setAction(actionNo, verbPrefix(i - 1)
+								+ deletedSymbolResult[i][0]
+								+ deletedSymbolResult[i + 1][0]);
 						i = i + 2;
 						actionNo++;
 					}
@@ -441,7 +599,8 @@ public class GetKeywords {
 					// i=i+2;
 
 				} else {
-					keyword[k].setAction(actionNo, deletedSymbolResult[i][0]);
+					keyword[k].setAction(actionNo, verbPrefix(i - 1)
+							+ deletedSymbolResult[i][0]);
 					// System.out.println(action);
 					// break;
 
@@ -451,9 +610,15 @@ public class GetKeywords {
 					i++;
 					actionNo++;
 				}
+
 			} else {
+
 				i++;
 			}
+
+			/*
+			 * 加上动词前缀
+			 */
 
 		}
 
@@ -477,11 +642,12 @@ public class GetKeywords {
 			 */
 			if ((i + 1 < length)
 					/*
-					 * 被/p 门将/n 得到/v   
+					 * 被/p 门将/n 得到/v
 					 * 
 					 * 此时，不能误识
 					 */
-					&& (deletedSymbolResult[i][1].equals("p")) &&(!(deletedSymbolResult[i][1].equals("pbei"))&& (deletedSymbolResult[i + 1][1]
+					&& (deletedSymbolResult[i][1].equals("p"))
+					&& (!(deletedSymbolResult[i][1].equals("pbei")) && (deletedSymbolResult[i + 1][1]
 							.equals("n")
 					// 在/p 中场/s
 					// s 处所词
@@ -501,9 +667,8 @@ public class GetKeywords {
 			else if (deletedSymbolResult[i][1].equals("n")
 					&& ((i + 1 < length) && (deletedSymbolResult[i + 1][1]
 							.equals("f")
-						
-							
-							))) {
+
+					))) {
 				if ((i - 1 >= 0) && (deletedSymbolResult[i - 1][1].equals("a"))) {
 					keyword[sceneNo].setScene(deletedSymbolResult[i - 1][0]
 							+ deletedSymbolResult[i][0]
@@ -528,7 +693,13 @@ public class GetKeywords {
 						+ deletedSymbolResult[i + 1][0]);
 
 			}
-			
+			/*
+			 * 中场/s
+			 */
+			else if (deletedSymbolResult[i][1].equals("scene_word")) {
+				keyword[sceneNo].setScene(deletedSymbolResult[i][0]);
+
+			}
 
 		}
 		// System.out.println(scene);
@@ -547,10 +718,11 @@ public class GetKeywords {
 	/*
 	 * 主体个数的游标
 	 */
-	
+
 	public void insertBodyPart() {
-		k=-1;
-		for (int i = 0; (i < length)&&(k<subjectNo); i++) {
+		k = -1;
+		for (int i = 0; (i < length) && (k < subjectNo); i++) {
+
 			/*
 			 * 禁区/n 内/f 左脚/n
 			 */
@@ -564,8 +736,8 @@ public class GetKeywords {
 					|| deletedSymbolResult[i][1].equals("r")) {
 				k++;
 			}
-			
-			if (deletedSymbolResult[i][1].equals("bp")) {
+
+			if (deletedSymbolResult[i][1].equals("bodyPart_word")) {
 				keyword[k].setBodyPart(deletedSymbolResult[i][0]);
 
 			}
@@ -583,7 +755,7 @@ public class GetKeywords {
 			 * 中场/n 右/f 脚/n
 			 */
 			else if (deletedSymbolResult[i][1].equals("pyong")) {
-				keyword[k].setBodyPart(deletedSymbolResult[i+1][0]);
+				keyword[k].setBodyPart(deletedSymbolResult[i + 1][0]);
 
 			}
 
@@ -645,6 +817,7 @@ public class GetKeywords {
 		 * 
 		 * 0-0:传球 0-1:配合 1-2:助攻 2-3:破门得分
 		 */
+
 		for (int i = 0; i < key.subjectNo; i++) {
 			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
 			for (int j = 0; j < key.actionNo; j++) {
