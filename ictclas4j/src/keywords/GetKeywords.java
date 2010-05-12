@@ -967,10 +967,59 @@ public class GetKeywords {
 		 * 将四个关键要素的个数存入到tfidf.Item里
 		 */
 		
-		System.out.println("主体个数："+subjectNo);
-		System.out.println("行为个数："+actionNo);
-		System.out.println("主体个数："+subjectNo);
-		System.out.println("主体个数："+subjectNo);
+		System.out.println("subject个数："+subjectNo);
+		System.out.println("action个数："+actionNo);
+		System.out.println("scene个数："+sceneNo);
+		System.out.println("bodypart个数："+bodyPartNo);
 	}
+	
+	
+	/*
+	 * 封闭一个接口，供界面测试调用
+	 */
+	public void getKeywordsMain4GUI(String line) throws FileNotFoundException {
+		SegTag segTag = new SegTag(1);
+
+
+	
+					SegResult seg_res = segTag.split(line);
+					/*
+					 * 获取分词的最终结果。
+					 */
+					// key.wordSegResult=seg_res.getFinalResult();
+					// System.out.println(seg_res.getFinalResult());
+					wordSegResult = seg_res.getFinalResult();
+					System.out.println("获取分词的最终结果:\n" +wordSegResult + "\n");
+
+					deleteSymbols();
+
+					plusDictionary();
+					
+					System.out
+							.println("**********************************************************************\n**********************************************************************");
+					insertSubject();
+					insertAction();
+					insertScene();
+					insertBodyPart();
+					for (int i = 0; i < subjectNo; i++) {
+						System.out.println("主体" + i + ":" + keyword[i].getSubject());
+						for (int j = 0; j < actionNo; j++) {
+							System.out.println("行为" + i + "-" + j + ":"
+									+ keyword[i].getAction(j));
+						}
+						System.out.println("场景" + i + ":" + keyword[i].getScene());
+						System.out.println("身体部位" + i + ":" + keyword[i].getBodyPart());
+						System.out.println();
+
+					}
+
+			
+
+		
+	
+
+		
+	}
+
 
 }

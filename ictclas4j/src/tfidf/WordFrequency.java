@@ -50,7 +50,9 @@ public class WordFrequency {
 	public static void main(String args[]) throws IOException {
 		WordFrequency frequency=new WordFrequency();
 		GetKeywords keywords=new GetKeywords();
-
+		/*
+		 * 运行keywords.GetKeywords提供的分词和关键词提取模块
+		 */
 		keywords.getKeywordsMain();
 	}
 
