@@ -869,5 +869,47 @@ public class GetKeywords {
 		}
 
 	}
+	
+	
+	/*
+	 * 封闭一个接口，供TF-IDF调用
+	 */
+	public static void getKeywordsMain() {
+		
+		GetKeywords key = new GetKeywords();
+		key.getWordSegResult();
+
+		System.out.println("获取分词的最终结果:\n" + key.wordSegResult + "\n");
+
+		key.deleteSymbols();
+
+		key.plusDictionary();
+		
+		System.out
+				.println("**********************************************************************\n**********************************************************************");
+		key.insertSubject();
+		key.insertAction();
+		key.insertScene();
+		key.insertBodyPart();
+		for (int i = 0; i < key.subjectNo; i++) {
+			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
+			for (int j = 0; j < key.actionNo; j++) {
+				System.out.println("行为" + i + "-" + j + ":"
+						+ key.keyword[i].getAction(j));
+			}
+			System.out.println("场景" + i + ":" + key.keyword[i].getScene());
+			System.out.println("身体部位" + i + ":" + key.keyword[i].getBodyPart());
+			System.out.println();
+
+		}
+		/*
+		 * 将四个关键要素的个数存入到tfidf.Item里
+		 */
+		
+		System.out.println("主体个数："+key.subjectNo);
+		System.out.println("行为个数："+key.actionNo);
+		System.out.println("主体个数："+key.subjectNo);
+		System.out.println("主体个数："+key.subjectNo);
+	}
 
 }
