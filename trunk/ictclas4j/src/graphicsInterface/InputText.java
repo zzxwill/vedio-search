@@ -42,6 +42,9 @@ class Interface extends JPanel {
 		textInputFrame.setLocation(x, y);
 
 		JButton search = new JButton("搜索视频");
+//		Icon icon=new Icon("C:\\img\\2.jpg");
+//		JButton search = new JButton(new ImageIcon("C:\\img\\3.jpg"));
+		
 		JLabel note = new JLabel("请输入视频检索文本");
 		final JTextField text = new JTextField(30);
 
@@ -72,8 +75,9 @@ class Interface extends JPanel {
 				/*
 				 * 显示输出的结果
 				 */
-				JOptionPane.showMessageDialog(null, "OK");
-				
+//				JOptionPane.showMessageDialog(null, "OK");
+				new OutputVedio();
+			
 
 			}
 		});
