@@ -188,9 +188,14 @@ public class GetKeywords {
 			 * 守门员 /n
 			 */
 			if (deletedSymbolResult[i][0].equals("守门员")
-					|| deletedSymbolResult[i][0].equals("门将")) {
+					|| deletedSymbolResult[i][0].equals("门将")
+					/*
+					 * 利用/v 对手/n 防守/vn 失误/vn
+					 */
+					|| deletedSymbolResult[i][0].equals("对手")) {
 				deletedSymbolResult[i][1] = "nr";
-			} else if (deletedSymbolResult[i][0].equals("抱")) {
+			} else if (deletedSymbolResult[i][0].equals("抱")
+					||deletedSymbolResult[i][0].equals("长传")) {
 				deletedSymbolResult[i][1] = "v";
 			}
 			/*
@@ -444,6 +449,16 @@ public class GetKeywords {
 				subjectNo++;
 
 			}
+			/*
+			 * ，/w 高/ad 出/v 横梁/n 而/c 过/v
+			 * 
+			 * ，门将飞身得到
+			 */
+			if (deletedSymbolResult[i][1].equals("w") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				subjectNo++;
+			}
 
 		}
 
@@ -510,6 +525,20 @@ public class GetKeywords {
 					&& !deletedSymbolResult[i + 1][1].equals("n")) {
 				k++;
 			}
+			
+			
+			/*
+			 * ，/w 高/ad 出/v 横梁/n 而/c 过/v
+			 * 
+			 * ，门将飞身得到
+			 */
+			if (deletedSymbolResult[i][1].equals("w") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				k++;
+			}
+
+			
 
 			/*
 			 * 吃饭/v
@@ -568,16 +597,13 @@ public class GetKeywords {
 						/*
 						 * 飞/v 身/ng 得到/v
 						 */
-						|| deletedSymbolResult[i + 1][1].equals("ng")
-						))) {
+						|| deletedSymbolResult[i + 1][1].equals("ng")))) {
 					if (((i + 2) < length)
 							/*
 							 * 射门/v 得/u 分/v -----------射门/v 得/v 分/v
 							 */
-							&& ((deletedSymbolResult[i + 2][1].equals("n"))
-									|| (deletedSymbolResult[i + 2][1]
-											.equals("v"))
-							)) {
+							&& ((deletedSymbolResult[i + 2][1].equals("n")) || (deletedSymbolResult[i + 2][1]
+									.equals("v")))) {
 
 						keyword[k].setAction(actionNo, verbPrefix(i - 1)
 								+ deletedSymbolResult[i][0]
@@ -736,6 +762,18 @@ public class GetKeywords {
 					|| deletedSymbolResult[i][1].equals("r")) {
 				k++;
 			}
+			
+			/*
+			 * ，/w 高/ad 出/v 横梁/n 而/c 过/v
+			 * 
+			 * ，门将飞身得到
+			 */
+			if (deletedSymbolResult[i][1].equals("w") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				k++;
+			}
+			
 
 			if (deletedSymbolResult[i][1].equals("bodyPart_word")) {
 				keyword[k].setBodyPart(deletedSymbolResult[i][0]);
