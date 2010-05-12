@@ -32,8 +32,8 @@ public class Input {
 					 */
 					// key.wordSegResult=seg_res.getFinalResult();
 					// System.out.println(seg_res.getFinalResult());
-					wordSegResult = seg_res.getFinalResult();
-					return wordSegResult;
+//					wordSegResult = seg_res.getFinalResult();
+//					return wordSegResult;
 
 				} catch (Throwable t) {
 					t.printStackTrace();

@@ -1,6 +1,8 @@
 package keywords;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.ictclas4j.bean.SegResult;
@@ -59,12 +61,45 @@ public class GetKeywords {
 	 * 得到分词的最终结果。
 	 */
 
-	public String getWordSegResult() {
+	public String getWordSegResult() throws FileNotFoundException {
 
 		SegTag segTag = new SegTag(1);
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				try {
+					SegResult seg_res = segTag.split(line);
+					/*
+					 * 获取分词的最终结果。
+					 */
+					// key.wordSegResult=seg_res.getFinalResult();
+					// System.out.println(seg_res.getFinalResult());
+					wordSegResult = seg_res.getFinalResult();
+					return wordSegResult;
+
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return line;
+	}
+	
+	
+	public String getWordSegResultFromFile() throws FileNotFoundException {
+
+		SegTag segTag = new SegTag(1);
+
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(
+//				System.in));
+		FileReader reader1 = new FileReader("Data/Text4TF-IDF.txt");
+		BufferedReader reader = new BufferedReader(reader1);
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
@@ -802,7 +837,7 @@ public class GetKeywords {
 
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws FileNotFoundException {
 		System.out.println("文本输入样例：");
 		System.out.println("1.姚明在体育馆打篮球");
 		System.out.println("2.我踢足球");
@@ -874,42 +909,68 @@ public class GetKeywords {
 	/*
 	 * 封闭一个接口，供TF-IDF调用
 	 */
-	public static void getKeywordsMain() {
-		
-		GetKeywords key = new GetKeywords();
-		key.getWordSegResult();
+	public void getKeywordsMain() throws FileNotFoundException {
+		SegTag segTag = new SegTag(1);
 
-		System.out.println("获取分词的最终结果:\n" + key.wordSegResult + "\n");
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(
+//				System.in));
+		FileReader reader1 = new FileReader("Data/Text4TF-IDF.txt");
+		BufferedReader reader = new BufferedReader(reader1);
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				try {
+					SegResult seg_res = segTag.split(line);
+					/*
+					 * 获取分词的最终结果。
+					 */
+					// key.wordSegResult=seg_res.getFinalResult();
+					// System.out.println(seg_res.getFinalResult());
+					wordSegResult = seg_res.getFinalResult();
+					System.out.println("获取分词的最终结果:\n" +wordSegResult + "\n");
 
-		key.deleteSymbols();
+					deleteSymbols();
 
-		key.plusDictionary();
-		
-		System.out
-				.println("**********************************************************************\n**********************************************************************");
-		key.insertSubject();
-		key.insertAction();
-		key.insertScene();
-		key.insertBodyPart();
-		for (int i = 0; i < key.subjectNo; i++) {
-			System.out.println("主体" + i + ":" + key.keyword[i].getSubject());
-			for (int j = 0; j < key.actionNo; j++) {
-				System.out.println("行为" + i + "-" + j + ":"
-						+ key.keyword[i].getAction(j));
+					plusDictionary();
+					
+					System.out
+							.println("**********************************************************************\n**********************************************************************");
+					insertSubject();
+					insertAction();
+					insertScene();
+					insertBodyPart();
+					for (int i = 0; i < subjectNo; i++) {
+						System.out.println("主体" + i + ":" + keyword[i].getSubject());
+						for (int j = 0; j < actionNo; j++) {
+							System.out.println("行为" + i + "-" + j + ":"
+									+ keyword[i].getAction(j));
+						}
+						System.out.println("场景" + i + ":" + keyword[i].getScene());
+						System.out.println("身体部位" + i + ":" + keyword[i].getBodyPart());
+						System.out.println();
+
+					}
+
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
 			}
-			System.out.println("场景" + i + ":" + key.keyword[i].getScene());
-			System.out.println("身体部位" + i + ":" + key.keyword[i].getBodyPart());
-			System.out.println();
-
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
+		
+	
+
+		
 		/*
 		 * 将四个关键要素的个数存入到tfidf.Item里
 		 */
 		
-		System.out.println("主体个数："+key.subjectNo);
-		System.out.println("行为个数："+key.actionNo);
-		System.out.println("主体个数："+key.subjectNo);
-		System.out.println("主体个数："+key.subjectNo);
+		System.out.println("主体个数："+subjectNo);
+		System.out.println("行为个数："+actionNo);
+		System.out.println("主体个数："+subjectNo);
+		System.out.println("主体个数："+subjectNo);
 	}
 
 }
