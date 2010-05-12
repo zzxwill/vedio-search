@@ -49,36 +49,9 @@ public class WordFrequency {
 	
 	public static void main(String args[]) throws IOException {
 		WordFrequency frequency=new WordFrequency();
-//		GetKeywords keywords=new GetKeywords();
-		FileReader reader = new FileReader("Data/Text4TF-IDF.txt");
-		BufferedReader br = new BufferedReader(reader);
-//		while ((s1 = br.readLine()) != null) {
-//			System.out.println(s1);
-//		}
-		
-		SegTag segTag = new SegTag(1);	
+		GetKeywords keywords=new GetKeywords();
 
-		String line=null;
-		try {
-			while ((line=br.readLine())!=null) {
-				try { 
-//					SegResult seg_res=segTag.split(line);
-//					System.out.println(seg_res.getFinalResult());
-					/*
-					 * ‘À––GetKeywords()
-					 */
-					GetKeywords.getKeywordsMain();
-					
-				} catch (Throwable t) {
-					t.printStackTrace();					
-				}
-			}
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}	
-		
-		br.close();
-		reader.close();
+		keywords.getKeywordsMain();
 	}
 
 }
