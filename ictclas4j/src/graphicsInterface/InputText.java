@@ -27,7 +27,8 @@ class Interface extends JPanel {
 	}
 
 	public String interfaceSet() {
-		textInputFrame = new JFrame("视频检索");
+		setMyLookAndFeel();
+		textInputFrame = new JFrame("面向视频场景内容检索的文本解析工具");
 		textInputFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout lay = new GridBagLayout();
 		setLayout(lay);
@@ -49,13 +50,19 @@ class Interface extends JPanel {
 		final JTextField text = new JTextField(30);
 
 		GridBagConstraints constraints = new GridBagConstraints();
+		/*
+		 * 用于放检索的结果的
+		 */
+		JPanel vedioPanel = new JPanel();
+		
 		constraints.fill=GridBagConstraints.NONE;
 		constraints.anchor=GridBagConstraints.EAST;
 		constraints.weightx=3;
 		constraints.weighty=4;
-		add(note, constraints, 0, 0, 2, 1);
+		add(note, constraints, 0, 0, 1, 1);
 		add(text, constraints, 0, 1, 1, 1);
-		add(search, constraints, 4, 1, 1, 1);
+		add(search, constraints, 3, 1, 1, 1);
+		add(vedioPanel, constraints, 0, 3, 40, 3);
 
 		textInputFrame.setVisible(false);
 		textInputFrame.setVisible(true);
@@ -83,12 +90,52 @@ class Interface extends JPanel {
 		});
 		return inputText;
 	}
+	
+	private void setMyLookAndFeel() {
+	      try {
+	          
+
+	     //设置windows风格的look and feel
+	    UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	         
+
+	          Font font = new Font("宋体", Font.PLAIN, 24);//字体为宋体，样式为常规，字号12
+	          UIManager.put("MenuBar.font", font);
+	          UIManager.put("MenuItem.font", font);
+	          UIManager.put("Menu.font", font);
+	          UIManager.put("PopupMenu.font", font);
+	          UIManager.put("ToolBar.font", font);
+	          UIManager.put("ToolTip.font", font);
+	          UIManager.put("TabbedPane.font", font);
+	          UIManager.put("Label.font", font);
+	          UIManager.put("List.font", font);
+	          UIManager.put("ComboBox.font", font);
+	          UIManager.put("Button.font", font);
+	          UIManager.put("Table.font", font);
+	          UIManager.put("TableHeader.font", font);
+	          UIManager.put("Tree.font", font);
+	          UIManager.put("TextField.font", font);
+	          UIManager.put("TextArea.font", font);
+	          UIManager.put("TitledBorder.font", font);
+	          UIManager.put("OptionPane.font", font);
+	          UIManager.put("RadioButton.font", font);
+	          UIManager.put("CheckBox.font", font);
+	          UIManager.put("ToggleButton.font", font);
+	          UIManager.put("Dialog.font", font);
+	          UIManager.put("Panel.font", font);
+	      }catch (Exception e) {
+	          e.printStackTrace();
+	      }
+	  }
+
 
 }
 
 public class InputText {
 	public static void main(String args[]){
+		
 		Interface face=new Interface();
+		
 		face.interfaceSet();
 
 	}
