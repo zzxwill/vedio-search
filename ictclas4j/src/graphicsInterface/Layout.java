@@ -4,9 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-
 import keywords.GetKeywords;
-
 public class Layout{
 	static final int WIDTH = 500;
 	static final int HEIGHT = 800;
