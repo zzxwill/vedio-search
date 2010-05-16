@@ -77,11 +77,20 @@ public class OutputVedio2 extends JPanel {
 
 		
 		JPanel p1=new JPanel();
+		
+		/*
+		 * 放置分词和关键词提取 显示结果
+		 */
+//		JPanel p2=new JPanel();
+//		System.out.println();
+		
+
+		
 		p1.setLayout(new BorderLayout(1,4));
 
 		p1.setVisible(true);
 	
-		p1.add(note,"North");
+		p1.add(note1,"North");
 		p1.add(search,"East");
 		p1.add(nullNote,"West");
 		p1.add(text,"Center");
@@ -99,7 +108,9 @@ public class OutputVedio2 extends JPanel {
 		
 		add(p1, constraints, 0, 0, 0, 1);
 		
-	
+//		add(SegResult1,constraints, 0, 9, 1, 1);
+//		add(SegResult2,constraints, 0, 10, 1, 1);
+		
 		add(note, constraints, 0, 2, 2, 4);
 		add(vedio1, constraints, 0, 6, 1, 1);
 		add(vedio2, constraints, 2, 6, 1, 1);
