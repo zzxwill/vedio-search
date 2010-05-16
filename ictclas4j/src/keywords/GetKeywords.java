@@ -9,6 +9,7 @@ import org.ictclas4j.bean.SegResult;
 import org.ictclas4j.segment.*;
 
 import tfidf.Item;
+import tfidf.WordFrequency;
 
 public class GetKeywords {
 	/*
@@ -905,6 +906,8 @@ public class GetKeywords {
 	}
 
 	public static void main(String args[]) throws FileNotFoundException {
+		
+		WordFrequency wordFrequency=new WordFrequency();
 		System.out.println("文本输入样例：");
 		System.out.println("1.姚明在体育馆打篮球");
 		System.out.println("2.我踢足球");
@@ -969,6 +972,29 @@ public class GetKeywords {
 			System.out.println();
 
 		}
+		
+		
+		/*
+		 * 一个句子中所有词的个数总各
+		 */
+		int allWordInSentence=key.subjectNo+key.actionNo+key.sceneNo+key.bodyPartNo;
+		System.out.println("allWordInSentence:"+allWordInSentence);
+		/*
+		 * 权重
+		 */
+		double subject_weight= wordFrequency.countWordFrequency(0, key.subjectNo, allWordInSentence);
+		double action_weight= wordFrequency.countWordFrequency(1, key.actionNo, allWordInSentence);
+		double scene_weight= wordFrequency.countWordFrequency(0, key.sceneNo, allWordInSentence);
+		double bodyPart_weight= wordFrequency.countWordFrequency(0, key.bodyPartNo, allWordInSentence);
+		
+		
+		
+		System.out.println("subject权重："+subject_weight);
+		System.out.println("action权重："+action_weight);
+		System.out.println("scene权重："+scene_weight);
+		System.out.println("bodyPart权重："+bodyPart_weight);
+
+		
 
 	}
 
