@@ -27,7 +27,7 @@ public class GetKeywords {
 	/*
 	 * 分词的最终结果,只允许同一个类调用。
 	 */
-	private String wordSegResult = null;
+	public String wordSegResult = null;
 	/*
 	 * 删除了标点符号后的字符数组。 并且，以二维数组存储了。 即 [][0]词 [][1]词性 [][2]标注是否为主体、行为、场景词
 	 */
