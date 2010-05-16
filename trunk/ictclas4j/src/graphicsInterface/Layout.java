@@ -3,6 +3,8 @@ package graphicsInterface;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+
 import javax.swing.*;
 import keywords.GetKeywords;
 public class Layout{
@@ -27,7 +29,9 @@ public class Layout{
 
 
 		JButton search = new JButton("搜索视频");
+//		JLabel note = new JLabel(" 请输入视频检索文本");
 		JLabel note = new JLabel(" 请输入视频检索文本");
+
 		JTextField text = new JTextField(25);
 		JLabel nullNote = new JLabel(" ");
 		
@@ -72,7 +76,7 @@ public class Layout{
 			public void actionPerformed(ActionEvent event) {
 //				inputText = text.getText();
 //				System.out.println("用户输入的视频检索文本是：" + inputText);
-				GetKeywords key=new GetKeywords();
+				
 			//	try {
 //					key.getKeywordsMain4GUI(inputText);
 		//		} catch (FileNotFoundException e) {
@@ -84,7 +88,13 @@ public class Layout{
 				 * 显示输出的结果
 				 */
 //				JOptionPane.showMessageDialog(null, "OK");
-				new OutputVedio2();
+				try {
+					new SegAndKeywords();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//				new OutputVedio2();
 			
 
 			}
