@@ -134,12 +134,12 @@ public class WordFrequency {
 		 * º∆À„idf
 		 */
 		for (int j = 0; j < 4; j++) {
-			idf[j] = Math.log((item[0].allSentencesNo) / sentenceWithWord[j]);
+			idf[j] = Math.log(((double)(item[0].allSentencesNo)) / (double)sentenceWithWord[j]);
 		}
 		/*
 		 * w=tf*idf;
 		 */
-		return (wordInSentence/allWordInSentence)*idf[keywordsNo];
+		return (idf[keywordsNo]*(double)wordInSentence/(double)allWordInSentence);
 
 	}
 
