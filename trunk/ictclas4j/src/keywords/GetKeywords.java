@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import org.ictclas4j.bean.SegResult;
 import org.ictclas4j.segment.*;
 
+import tfidf.Item;
+
 public class GetKeywords {
 	/*
 	 * 用于存入主体、行为、场景的数据结构。
@@ -17,9 +19,20 @@ public class GetKeywords {
 	/*
 	 * 初始化keyword
 	 */
+	private static final int ITEMNO = 65535;
+	Item item[] = new Item[ITEMNO];
+
 	public GetKeywords() {
 		for (int i = 0; i < 3; i++) {
 			keyword[i] = new KeywordStruct();
+		}
+
+		/*
+		 * 初始化Item.java
+		 */
+
+		for (int i = 0; i < ITEMNO; i++) {
+			item[i] = new Item();
 		}
 
 	}
@@ -90,14 +103,13 @@ public class GetKeywords {
 
 		return line;
 	}
-	
-	
+
 	public String getWordSegResultFromFile() throws FileNotFoundException {
 
 		SegTag segTag = new SegTag(1);
 
-//		BufferedReader reader = new BufferedReader(new InputStreamReader(
-//				System.in));
+		// BufferedReader reader = new BufferedReader(new InputStreamReader(
+		// System.in));
 		FileReader reader1 = new FileReader("Data/Text4TF-IDF.txt");
 		BufferedReader reader = new BufferedReader(reader1);
 		String line = null;
@@ -230,7 +242,7 @@ public class GetKeywords {
 					|| deletedSymbolResult[i][0].equals("对手")) {
 				deletedSymbolResult[i][1] = "nr";
 			} else if (deletedSymbolResult[i][0].equals("抱")
-					||deletedSymbolResult[i][0].equals("长传")) {
+					|| deletedSymbolResult[i][0].equals("长传")) {
 				deletedSymbolResult[i][1] = "v";
 			}
 			/*
@@ -528,6 +540,7 @@ public class GetKeywords {
 	public int k = -1;
 
 	public void insertAction() {
+		k = -1;
 
 		// System.out.println("\n行为：");
 		/*
@@ -560,8 +573,7 @@ public class GetKeywords {
 					&& !deletedSymbolResult[i + 1][1].equals("n")) {
 				k++;
 			}
-			
-			
+
 			/*
 			 * ，/w 高/ad 出/v 横梁/n 而/c 过/v
 			 * 
@@ -572,8 +584,6 @@ public class GetKeywords {
 					&& !deletedSymbolResult[i + 1][1].equals("n")) {
 				k++;
 			}
-
-			
 
 			/*
 			 * 吃饭/v
@@ -688,16 +698,51 @@ public class GetKeywords {
 	/*
 	 * 获取主体行为发生的场景。
 	 */
-
 	/*
 	 * 场景个数
 	 */
-	int sceneNo = 0;
+	public int sceneNo = 0;
+//	k = -1;
+
 
 	public void insertScene() {
+		k = -1;
 		// System.out.println("\n场景：");
 
 		for (int i = 0; i < length; i++) {
+			if (deletedSymbolResult[i][0].equals(keyword[0].getSubject())
+					|| deletedSymbolResult[i][0]
+							.equals(keyword[1].getSubject())
+					|| deletedSymbolResult[i][0]
+							.equals(keyword[2].getSubject())) {
+				k++;
+			}
+			/*
+			 * 碰到"被"了，也要K++,表示主体发生了变化 * 被/p 挡/v 出/v 被/p 门将/n 得到/v
+			 * 
+			 * 门将 变成了 nr
+			 */
+			if (deletedSymbolResult[i][1].equals("pbei") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				k++;
+			}
+
+			/*
+			 * ，/w 高/ad 出/v 横梁/n 而/c 过/v
+			 * 
+			 * ，门将飞身得到
+			 */
+			if (deletedSymbolResult[i][1].equals("w") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				k++;
+			}
+			
+			
+			
+			
+			
 			/*
 			 * 姚明在体育馆打篮球。 在 体育馆 n
 			 */
@@ -734,6 +779,7 @@ public class GetKeywords {
 					keyword[sceneNo].setScene(deletedSymbolResult[i - 1][0]
 							+ deletedSymbolResult[i][0]
 							+ deletedSymbolResult[i + 1][0]);
+					sceneNo++;
 				}
 				/*
 				 * 禁区/n 内/f f 方位词
@@ -741,6 +787,7 @@ public class GetKeywords {
 				else {
 					keyword[sceneNo].setScene(deletedSymbolResult[i][0]
 							+ deletedSymbolResult[i + 1][0]);
+					sceneNo++;
 				}
 
 			}
@@ -752,6 +799,7 @@ public class GetKeywords {
 							.equals("q"))) {
 				keyword[sceneNo].setScene(deletedSymbolResult[i][0]
 						+ deletedSymbolResult[i + 1][0]);
+				sceneNo++;
 
 			}
 			/*
@@ -759,6 +807,7 @@ public class GetKeywords {
 			 */
 			else if (deletedSymbolResult[i][1].equals("scene_word")) {
 				keyword[sceneNo].setScene(deletedSymbolResult[i][0]);
+				sceneNo++;
 
 			}
 
@@ -774,7 +823,7 @@ public class GetKeywords {
 	/*
 	 * 场景个数
 	 */
-	int bodyPartNo = 0;
+	public int bodyPartNo = 0;
 
 	/*
 	 * 主体个数的游标
@@ -783,21 +832,24 @@ public class GetKeywords {
 	public void insertBodyPart() {
 		k = -1;
 		for (int i = 0; (i < length) && (k < subjectNo); i++) {
-
-			/*
-			 * 禁区/n 内/f 左脚/n
-			 */
-			/*
-			 * if (deletedSymbolResult[i][0].equals("左脚")) {
-			 * keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]);
-			 * 
-			 * }
-			 */
-			if (deletedSymbolResult[i][1].equals("nr")
-					|| deletedSymbolResult[i][1].equals("r")) {
+			if (deletedSymbolResult[i][0].equals(keyword[0].getSubject())
+					|| deletedSymbolResult[i][0]
+							.equals(keyword[1].getSubject())
+					|| deletedSymbolResult[i][0]
+							.equals(keyword[2].getSubject())) {
 				k++;
 			}
-			
+			/*
+			 * 碰到"被"了，也要K++,表示主体发生了变化 * 被/p 挡/v 出/v 被/p 门将/n 得到/v
+			 * 
+			 * 门将 变成了 nr
+			 */
+			if (deletedSymbolResult[i][1].equals("pbei") && (i + 1 < length)
+					&& !deletedSymbolResult[i + 1][1].equals("nr")
+					&& !deletedSymbolResult[i + 1][1].equals("n")) {
+				k++;
+			}
+
 			/*
 			 * ，/w 高/ad 出/v 横梁/n 而/c 过/v
 			 * 
@@ -809,9 +861,22 @@ public class GetKeywords {
 				k++;
 			}
 			
+			
+			
+			/*
+			 * 禁区/n 内/f 左脚/n
+			 */
+			/*
+			 * if (deletedSymbolResult[i][0].equals("左脚")) {
+			 * keyword[bodyPartNo].setBodyPart(deletedSymbolResult[i][0]);
+			 * 
+			 * }
+			 */
+			
 
 			if (deletedSymbolResult[i][1].equals("bodyPart_word")) {
 				keyword[k].setBodyPart(deletedSymbolResult[i][0]);
+				bodyPartNo++;
 
 			}
 			/*
@@ -822,6 +887,7 @@ public class GetKeywords {
 							.equals("n"))) {
 				keyword[k].setBodyPart(deletedSymbolResult[i][0]
 						+ deletedSymbolResult[i + 1][0]);
+				bodyPartNo++;
 
 			}
 			/*
@@ -829,6 +895,7 @@ public class GetKeywords {
 			 */
 			else if (deletedSymbolResult[i][1].equals("pyong")) {
 				keyword[k].setBodyPart(deletedSymbolResult[i + 1][0]);
+				bodyPartNo++;
 
 			}
 
@@ -904,12 +971,17 @@ public class GetKeywords {
 		}
 
 	}
-	
-	
+
 	/*
 	 * 封闭一个接口，供TF-IDF调用
 	 */
-	public void getKeywordsMain() throws FileNotFoundException {
+//	Item it=new Item();
+	public Item[] getKeywordsMain4IFIDF() throws FileNotFoundException {
+		/*
+		 * Item的一个实例
+		 */
+		
+		
 		SegTag segTag = new SegTag(1);
 
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -919,13 +991,19 @@ public class GetKeywords {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
+				System.out.println("zzxwill:"+line);
+				/*
+				 * 获取总的句子个数
+				 * 
+				 * 用item[0]表示
+				 */
+				item[0].allSentencesNo++;
+				
 				try {
 					SegResult seg_res = segTag.split(line);
 					/*
 					 * 获取分词的最终结果。
 					 */
-					// key.wordSegResult=seg_res.getFinalResult();
-					// System.out.println(seg_res.getFinalResult());
 					wordSegResult = seg_res.getFinalResult();
 					System.out.println("获取分词的最终结果:\n" +wordSegResult + "\n");
 
@@ -933,23 +1011,43 @@ public class GetKeywords {
 
 					plusDictionary();
 					
-					System.out
-							.println("**********************************************************************\n**********************************************************************");
 					insertSubject();
 					insertAction();
 					insertScene();
 					insertBodyPart();
-					for (int i = 0; i < subjectNo; i++) {
-						System.out.println("主体" + i + ":" + keyword[i].getSubject());
-						for (int j = 0; j < actionNo; j++) {
-							System.out.println("行为" + i + "-" + j + ":"
-									+ keyword[i].getAction(j));
-						}
-						System.out.println("场景" + i + ":" + keyword[i].getScene());
-						System.out.println("身体部位" + i + ":" + keyword[i].getBodyPart());
-						System.out.println();
+					/*
+					 * 统计词subject、action、scene、bodypart在句子i中出现的次数
+					 */
+					item[item[0].allSentencesNo-1].setSubjectNo(subjectNo);
+					item[item[0].allSentencesNo-1].setActionNo(actionNo);
+					System.out.println("actionNo:"+actionNo);
+					item[item[0].allSentencesNo-1].setSceneNo(sceneNo);
+					item[item[0].allSentencesNo-1].setBodyPartNo(bodyPartNo);
+					
+					     
+					System.out.println("Sentence Number:"+(item[0].allSentencesNo-1));
 
-					}
+					System.out.println("subjectNo["+(item[0].allSentencesNo-1)+"]："+item[item[0].allSentencesNo-1].getSubjectNo());
+					System.out.println("actionNo["+(item[0].allSentencesNo-1)+"]："+item[item[0].allSentencesNo-1].getActionNo());
+					System.out.println("sceneNo["+(item[0].allSentencesNo-1)+"]："+item[item[0].allSentencesNo-1].getSceneNo());
+					System.out.println("bodypartNo["+(item[0].allSentencesNo-1)+"]："+item[item[0].allSentencesNo-1].getBodyPartNo());
+					    
+					
+					
+					
+					System.out
+					.println("**********************************************************************\n**********************************************************************");
+			
+					
+					/*
+					 * 初始化
+					 */
+					subjectNo = 0;
+					actionNo = 0;
+					sceneNo = 0;
+					bodyPartNo = 0;
+					
+					
 
 				} catch (Throwable t) {
 					t.printStackTrace();
@@ -959,67 +1057,51 @@ public class GetKeywords {
 			e.printStackTrace();
 		}
 
-		
-	
-
-		
 		/*
 		 * 将四个关键要素的个数存入到tfidf.Item里
 		 */
+		return item;
 		
-		System.out.println("subject个数："+subjectNo);
-		System.out.println("action个数："+actionNo);
-		System.out.println("scene个数："+sceneNo);
-		System.out.println("bodypart个数："+bodyPartNo);
+		
 	}
-	
-	
+
 	/*
 	 * 封闭一个接口，供界面测试调用
 	 */
 	public void getKeywordsMain4GUI(String line) throws FileNotFoundException {
 		SegTag segTag = new SegTag(1);
 
+		SegResult seg_res = segTag.split(line);
+		/*
+		 * 获取分词的最终结果。
+		 */
+		// key.wordSegResult=seg_res.getFinalResult();
+		// System.out.println(seg_res.getFinalResult());
+		wordSegResult = seg_res.getFinalResult();
+		System.out.println("获取分词的最终结果:\n" + wordSegResult + "\n");
 
-	
-					SegResult seg_res = segTag.split(line);
-					/*
-					 * 获取分词的最终结果。
-					 */
-					// key.wordSegResult=seg_res.getFinalResult();
-					// System.out.println(seg_res.getFinalResult());
-					wordSegResult = seg_res.getFinalResult();
-					System.out.println("获取分词的最终结果:\n" +wordSegResult + "\n");
+		deleteSymbols();
 
-					deleteSymbols();
+		plusDictionary();
 
-					plusDictionary();
-					
-					System.out
-							.println("**********************************************************************\n**********************************************************************");
-					insertSubject();
-					insertAction();
-					insertScene();
-					insertBodyPart();
-					for (int i = 0; i < subjectNo; i++) {
-						System.out.println("主体" + i + ":" + keyword[i].getSubject());
-						for (int j = 0; j < actionNo; j++) {
-							System.out.println("行为" + i + "-" + j + ":"
-									+ keyword[i].getAction(j));
-						}
-						System.out.println("场景" + i + ":" + keyword[i].getScene());
-						System.out.println("身体部位" + i + ":" + keyword[i].getBodyPart());
-						System.out.println();
+		System.out
+				.println("**********************************************************************\n**********************************************************************");
+		insertSubject();
+		insertAction();
+		insertScene();
+		insertBodyPart();
+		for (int i = 0; i < subjectNo; i++) {
+			System.out.println("主体" + i + ":" + keyword[i].getSubject());
+			for (int j = 0; j < actionNo; j++) {
+				System.out.println("行为" + i + "-" + j + ":"
+						+ keyword[i].getAction(j));
+			}
+			System.out.println("场景" + i + ":" + keyword[i].getScene());
+			System.out.println("身体部位" + i + ":" + keyword[i].getBodyPart());
+			System.out.println();
 
-					}
+		}
 
-			
-
-		
-	
-
-		
 	}
-
 
 }
