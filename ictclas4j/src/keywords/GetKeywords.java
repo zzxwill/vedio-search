@@ -907,7 +907,26 @@ public class GetKeywords {
 
 	public static void main(String args[]) throws FileNotFoundException {
 		
+//		WordFrequency wordFrequency=new WordFrequency();
+		
 		WordFrequency wordFrequency=new WordFrequency();
+//		GetKeywords key4IFIDF = new GetKeywords();
+		double idf[]=wordFrequency.countWordFrequency();
+		
+		
+//		GetKeywords key4WordFrequency=wordFrequency.countWordFrequency();
+//		double subjectIDF=key4WordFrequency.i
+//		double actionIDF=wordFrequency.countWordFrequency(0);
+//		double sceneIDF=wordFrequency.countWordFrequency(0);
+//		double bodyPartIDF=wordFrequency.countWordFrequency(0);
+		
+		System.out.println("subject--IDF："+idf[0]);
+		System.out.println("action--IDF："+idf[1]);
+		System.out.println("scene--IDF："+idf[2]);
+		System.out.println("bodyPart--IDF："+idf[3]);
+		
+		
+		
 		System.out.println("文本输入样例：");
 		System.out.println("1.姚明在体育馆打篮球");
 		System.out.println("2.我踢足球");
@@ -978,21 +997,28 @@ public class GetKeywords {
 		 * 一个句子中所有词的个数总各
 		 */
 		int allWordInSentence=key.subjectNo+key.actionNo+key.sceneNo+key.bodyPartNo;
+		System.out.println("subjectNo:"+key.subjectNo);
+		System.out.println("actionNo:"+key.actionNo);
+		System.out.println("sceneNo:"+key.sceneNo);
+		System.out.println("bodyPartNo:"+key.bodyPartNo);
 		System.out.println("allWordInSentence:"+allWordInSentence);
+		
+
 		/*
 		 * 权重
 		 */
-		double subject_weight= wordFrequency.countWordFrequency(0, key.subjectNo, allWordInSentence);
-		double action_weight= wordFrequency.countWordFrequency(1, key.actionNo, allWordInSentence);
-		double scene_weight= wordFrequency.countWordFrequency(0, key.sceneNo, allWordInSentence);
-		double bodyPart_weight= wordFrequency.countWordFrequency(0, key.bodyPartNo, allWordInSentence);
 		
-		
+		double subject_weight= idf[0]*key.subjectNo/allWordInSentence;
+		double action_weight=  idf[1]*key.actionNo/allWordInSentence;
+		double scene_weight=  idf[2]*key.sceneNo/allWordInSentence;
+		double bodyPart_weight=  idf[3]*key.bodyPartNo/allWordInSentence;
 		
 		System.out.println("subject权重："+subject_weight);
 		System.out.println("action权重："+action_weight);
 		System.out.println("scene权重："+scene_weight);
 		System.out.println("bodyPart权重："+bodyPart_weight);
+		
+		
 
 		
 
