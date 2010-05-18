@@ -41,12 +41,12 @@ public class OutputVedio2 extends JPanel {
 		int y = (height - HEIGHT) / 2;
 		textInputFrame.setLocation(x, y);
 
-		JButton vedio1 = new JButton(new ImageIcon("C:\\img\\6.jpg"));
-		JButton vedio2 = new JButton(new ImageIcon("C:\\img\\2.jpg"));
-		JButton vedio3 = new JButton(new ImageIcon("C:\\img\\7.jpg"));
+		JButton vedio1 = new JButton(new ImageIcon("C:\\img\\9.jpg"));
+		JButton vedio2 = new JButton(new ImageIcon("C:\\img\\11.jpg"));
+		JButton vedio3 = new JButton(new ImageIcon("C:\\img\\10.jpg"));
 
-		JButton vedio4 = new JButton(new ImageIcon("C:\\img\\4.jpg"));
-		JButton vedio5 = new JButton(new ImageIcon("C:\\img\\5.jpg"));
+		JButton vedio4 = new JButton(new ImageIcon("C:\\img\\12.jpg"));
+		JButton vedio5 = new JButton(new ImageIcon("C:\\img\\13.jpg"));
 		JButton vedio6 = new JButton(new ImageIcon("C:\\img\\1.jpg"));
 		
 		JButton vedio7 = new JButton(new ImageIcon("C:\\img\\3.jpg"));
@@ -67,7 +67,7 @@ public class OutputVedio2 extends JPanel {
 
 		JButton search = new JButton("搜索视频");
 		JLabel note1 = new JLabel(" 请输入视频检索文本");
-		JTextField text = new JTextField(36);
+		JTextField text = new JTextField(30);
 		JLabel nullNote = new JLabel(" ");
 		
 	
@@ -98,7 +98,7 @@ public class OutputVedio2 extends JPanel {
 
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.anchor = GridBagConstraints.EAST;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.weightx = 3;
 		constraints.weighty = 4;
 //		add(note1, constraints, 0, 1, 1, 1);
@@ -113,10 +113,10 @@ public class OutputVedio2 extends JPanel {
 		
 		add(note, constraints, 0, 2, 2, 4);
 		add(vedio1, constraints, 0, 6, 1, 1);
-		add(vedio2, constraints, 2, 6, 1, 1);
-		add(vedio3, constraints, 4, 6, 1, 1);
+		add(vedio2, constraints, 1, 6, 1, 1);
+		add(vedio3, constraints, 3, 6, 1, 1);
 		add(vedio4, constraints, 0, 7, 1, 1);
-		add(vedio5, constraints, 2, 7, 1, 1);
+		add(vedio5, constraints, 1, 7, 1, 1);
 //		add(vedio6, constraints, 4, 7, 1, 1);
 //		add(vedio7, constraints, 0, 8, 1, 1);
 //		add(vedio8, constraints, 2, 8, 1, 1);
